@@ -43,6 +43,7 @@ INSTALLED_APPS = [
     "tailwind",
     'theme',
     'Management',
+    'rest_framework',
 ]
 
 MIDDLEWARE = [
@@ -60,7 +61,7 @@ ROOT_URLCONF = 'ecommerce.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [BASE_DIR / 'Management/templates'],
+        'DIRS': [BASE_DIR / 'Management' / 'templates'], 
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
