@@ -17,10 +17,12 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path, include
 from Management.api.views import add_category, add_product
-from Management.views import dashboard , managecategory , edit_category , delete_category , manageproduct , edit_product, delete_product
+from Management.views import dashboard , managecategory , edit_category , delete_category , manageproduct , edit_product, delete_product , login_view , register_view
 
 urlpatterns = [
     path('admin/', admin.site.urls),
+    path('register/',register_view, name='register'),
+    path('login/', login_view, name='login'),
     path('dashboard/', dashboard, name='dashboard'),
     path('add_category/', add_category, name='add_category'),
     path('managecategory/', managecategory , name='managecategory'),

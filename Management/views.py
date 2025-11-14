@@ -1,7 +1,54 @@
 from django.shortcuts import render , get_object_or_404 , redirect
 from Management.models import Category , Product
 from django.contrib import messages
-# Create your views here.
+from django.contrib.auth import authenticate, login, logout   
+from django.contrib.auth.models import User
+ 
+ 
+def register_view(request):
+    if request.method == 'POST':
+        first_name = request.POST.get('firstname')
+        last_name = request.POST.get('second_name')  
+        username = request.POST.get('username')
+        password = request.POST.get('password')
+
+     
+        if User.objects.filter(username=username).exists():
+            messages.info(request, 'Username is already taken.')
+            return redirect('/register/')
+
+        
+        User.objects.create_user(
+            first_name=first_name,
+            last_name=last_name,
+            username=username,
+            password=password
+        )
+
+        messages.success(request, 'Account created successfully.')
+        return redirect('/login/')   
+
+    return render(request, 'Register.html')
+
+
+def login_view(request):  
+    if request.method == "POST":
+        username = request.POST.get('username')
+        password = request.POST.get('password')
+
+        user = authenticate(request, username=username, password=password)
+ 
+        if user is None:
+            messages.error(request, "Invalid username or password.")
+            return redirect('/login/')   
+
+     
+        login(request, user)
+        return redirect('/')  
+
+    return render(request, 'login.html')
+
+
 
 def dashboard(request):
     category = Category.objects.all()
