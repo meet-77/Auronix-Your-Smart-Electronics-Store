@@ -1,0 +1,139 @@
+{% load static %}
+{% load static tailwind_tags %}
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Auronix Admin Dashboard</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+        {% tailwind_css %}
+  </head>
+  <body class="bg-gray-50 flex">
+    <!-- Sidebar -->
+    <aside class="w-64 bg-[#0b1f3a] text-white min-h-screen">
+      <!-- Logo -->
+      <div
+        class="flex items-center space-x-3 p-4 bg-white rounded-lg shadow-md m-3"
+      >
+        <!-- Logo Icon -->
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          class="h-10 w-10 text-blue-700"
+          fill="none"
+          viewBox="0 0 24 24"
+          stroke="currentColor"
+          stroke-width="2"
+        >
+          <path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            d="M13 10V3L4 14h7v7l9-11h-7z"
+          />
+        </svg>
+        <!-- Text -->
+        <span class="text-2xl font-bold text-blue-900">Auronix</span>
+      </div>
+<nav class="mt-6 space-y-2" id="sidebarMenu">
+
+          <a href="{% url "dashboard" %}" class="flex items-center px-6 py-2 hover:bg-blue-800 rounded-md">
+        <span class="mr-2">📊</span> Dashboard
+    </a>
+
+    <a href="{% url 'manageproduct' %}" 
+       class="flex items-center px-6 py-2 hover:bg-blue-800 rounded-md">
+        <span class="mr-2">💻</span> Manage Products
+    </a>
+
+    <a href="{% url 'managecategory' %}" 
+       class="flex items-center px-6 py-2 hover:bg-blue-800 rounded-md">
+        <span class="mr-2">🛒</span> Manage Category
+    </a>
+
+    <a href="#" class="flex items-center px-6 py-2 hover:bg-blue-800 rounded-md">
+        <span class="mr-2">👥</span> Customers
+    </a>
+
+    <a href="#" class="flex items-center px-6 py-2 hover:bg-blue-800 rounded-md">
+        <span class="mr-2">📦</span> Inventory
+    </a>
+
+    <a href="#" class="flex items-center px-6 py-2 hover:bg-blue-800 rounded-md">
+        <span class="mr-2">🗂️</span> Categories
+    </a>
+
+    <a href="#" class="flex items-center px-6 py-2 hover:bg-blue-800 rounded-md">
+        <span class="mr-2">💰</span> Discounts
+    </a>
+
+    <a href="#" class="flex items-center px-6 py-2 hover:bg-blue-800 rounded-md">
+        <span class="mr-2">📈</span> Reports
+    </a>
+
+    <a href="#" class="flex items-center px-6 py-2 hover:bg-blue-800 rounded-md">
+        <span class="mr-2">⚙️</span> Settings
+    </a>
+</nav>
+
+    </aside>
+
+    <!-- Main Section -->
+    <main class="flex-1 p-8">
+<div class="max-w-6xl mx-auto bg-white p-6 rounded-lg shadow-md">
+
+    <h1 class="text-2xl font-bold mb-4">All Products</h1>
+
+    <!-- Success messages -->
+    {% if messages %}
+        {% for message in messages %}
+            <div class="bg-green-600 text-white p-3 mb-3 rounded-md">
+                {{ message }}
+            </div>
+        {% endfor %}
+    {% endif %}
+
+    <table class="w-full border">
+        <thead>
+            <tr class="bg-gray-200 text-left">
+                <th class="p-3 border">ID</th>
+                <th class="p-3 border">Name</th>
+                <th class="p-3 border">Category</th>
+                <th class="p-3 border">Stock</th>
+                <th class="p-3 border">Price</th>
+                <th class="p-3 border">Available</th>
+                <th class="p-3 border text-center">Actions</th>
+            </tr>
+        </thead>
+
+        <tbody>
+            {% for p in product %}
+            <tr class="border">
+                <td class="p-3 border">{{ p.id }}</td>
+                <td class="p-3 border">{{ p.product_name }}</td>
+                <td class="p-3 border">{{ p.category.category_name }}</td>
+                <td class="p-3 border">{{ p.product_stock }}</td>
+                <td class="p-3 border">₹{{ p.price }}</td>
+                <td class="p-3 border">
+                    {% if p.available %} Yes {% else %} No {% endif %}
+                </td>
+
+                <td class="p-3 text-center">
+                    <a href="{% url 'edit_product' p.id %}" 
+                       class="bg-blue-600 text-white px-3 py-1 rounded-md hover:bg-blue-700">
+                        Edit
+                    </a>
+
+                    <a href="{% url 'delete_product' p.id %}"
+                       onclick="return confirm('Are you sure?')"
+                       class="bg-red-600 text-white px-3 py-1 rounded-md hover:bg-red-700 ml-2">
+                        Delete
+                    </a>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+</div>
+</main>
+</body>
+</html>

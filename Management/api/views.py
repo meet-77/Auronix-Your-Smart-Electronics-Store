@@ -1,4 +1,4 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect , get_object_or_404 
 from Management.models import Category, Product
 from Management.api.serializers import CategorySerializers , ProductSerializers
 from rest_framework.views import APIView
@@ -34,6 +34,28 @@ class CategoryAPIView(APIView):
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
+
+class CategorydetalisAPIView(APIView):
+    
+    def get(self , pk):
+        category = get_object_or_404(Category, pk=pk)
+        serializer = CategorySerializers(category )
+        return Response(serializer.data)
+    
+    def put(self, request , pk):
+        category = get_object_or_404(Category, pk=pk)
+        serializer = CategorySerializers(category, data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    
+                
+    def delete(self ,request , pk):
+        category = get_object_or_404(Category,pk=pk)
+        category.delete()
+        return Response({'message': 'Book deleted successfully'}, status=status.HTTP_204_NO_CONTENT)            
+        
 def add_product(request):
     if request.method == 'POST':
         product_name = request.POST.get('product_name')
@@ -74,3 +96,24 @@ class ProductAPIView(APIView):
             serializer.save()
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+class ProductdetailsAPIView(APIView):
+    
+    def get(self , pk):
+        product = get_object_or_404(Product,pk=pk)
+        serializer = ProductSerializers(product)
+        return Response(serializer.data)
+    
+    def put(self , pk , request):
+        product = get_object_or_404(Product , pk=pk)
+        serializer = ProductSerializers(product , data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    
+    def delete(self , request , pk):
+        product =get_object_or_404(Product, pk=pk)
+        product.delete()
+        return Response({'message': 'Book deleted successfully'}, status=status.HTTP_204_NO_CONTENT)           

@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Edit Category</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+
+<body class="bg-gray-100 p-10">
+
+<div class="max-w-xl mx-auto bg-white p-6 rounded-lg shadow-md">
+
+    <h1 class="text-2xl font-bold mb-4">Edit Category</h1>
+
+    <form action="" method="POST" class="space-y-4">
+        {% csrf_token %}
+
+        <div>
+            <label class="font-semibold">Category Name</label>
+            <input type="text" name="category_name"
+                   value="{{ category.category_name }}"
+                   class="w-full border p-2 rounded-md">
+        </div>
+
+        <div>
+            <label class="font-semibold">Category Description</label>
+            <textarea name="category_description"
+                      class="w-full border p-2 rounded-md"
+                      rows="4">{{ category.category_description }}</textarea>
+        </div>
+
+        <button class="w-full bg-blue-600 text-white py-2 rounded-md hover:bg-blue-700">
+            Update Category
+        </button>
+    </form>
+
+</div>
+
+</body>
+</html>

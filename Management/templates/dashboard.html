@@ -33,57 +33,47 @@
         <!-- Text -->
         <span class="text-2xl font-bold text-blue-900">Auronix</span>
       </div>
+<nav class="mt-6 space-y-2" id="sidebarMenu">
 
-      <nav class="mt-6 space-y-2">
-        <a href=" " class="flex items-center px-6 py-2 bg-blue-800 rounded-md">
-          <span class="mr-2">📊</span> Dashboard
-        </a>
-        <a
-          href=" "
-          class="flex items-center px-6 py-2 hover:bg-blue-800 rounded-md"
-        >
-          <span class="mr-2">💻</span> Manage Products
-        </a>
-        <a
-          href=" "
-          class="flex items-center px-6 py-2 hover:bg-blue-800 rounded-md"
-        >
-          <span class="mr-2">🛒</span> Orders
-        </a>
-        <a class="flex items-center px-6 py-2 hover:bg-blue-800 rounded-md">
-          <span class="mr-2">👥</span> Customers
-        </a>
-        <a
-          href=" "
-          class="flex items-center px-6 py-2 hover:bg-blue-800 rounded-md"
-        >
-          <span class="mr-2">📦</span> Inventory
-        </a>
-        <a
-          href=" "
-          class="flex items-center px-6 py-2 hover:bg-blue-800 rounded-md"
-        >
-          <span class="mr-2">🗂️</span> Categories
-        </a>
-        <a
-          href=" "
-          class="flex items-center px-6 py-2 hover:bg-blue-800 rounded-md"
-        >
-          <span class="mr-2">💰</span> Discounts
-        </a>
-        <a
-          href=" "
-          class="flex items-center px-6 py-2 hover:bg-blue-800 rounded-md"
-        >
-          <span class="mr-2">📈</span> Reports
-        </a>
-        <a
-          href="     "
-          class="flex items-center px-6 py-2 hover:bg-blue-800 rounded-md"
-        >
-          <span class="mr-2">⚙️</span> Settings
-        </a>
-      </nav>
+    <a href="#" class="flex items-center px-6 py-2 hover:bg-blue-800 rounded-md">
+        <span class="mr-2">📊</span> Dashboard
+    </a>
+
+    <a href="{% url 'manageproduct' %}" 
+       class="flex items-center px-6 py-2 hover:bg-blue-800 rounded-md">
+        <span class="mr-2">💻</span> Manage Products
+    </a>
+
+    <a href="{% url 'managecategory' %}" 
+       class="flex items-center px-6 py-2 hover:bg-blue-800 rounded-md">
+        <span class="mr-2">🛒</span> Manage Category
+    </a>
+
+    <a href="#" class="flex items-center px-6 py-2 hover:bg-blue-800 rounded-md">
+        <span class="mr-2">👥</span> Customers
+    </a>
+
+    <a href="#" class="flex items-center px-6 py-2 hover:bg-blue-800 rounded-md">
+        <span class="mr-2">📦</span> Inventory
+    </a>
+
+    <a href="#" class="flex items-center px-6 py-2 hover:bg-blue-800 rounded-md">
+        <span class="mr-2">🗂️</span> Categories
+    </a>
+
+    <a href="#" class="flex items-center px-6 py-2 hover:bg-blue-800 rounded-md">
+        <span class="mr-2">💰</span> Discounts
+    </a>
+
+    <a href="#" class="flex items-center px-6 py-2 hover:bg-blue-800 rounded-md">
+        <span class="mr-2">📈</span> Reports
+    </a>
+
+    <a href="#" class="flex items-center px-6 py-2 hover:bg-blue-800 rounded-md">
+        <span class="mr-2">⚙️</span> Settings
+    </a>
+</nav>
+
     </aside>
 
     <!-- Main Section -->
@@ -133,13 +123,13 @@
         <div class="bg-white rounded-lg shadow p-4 text-center">
           <p class="text-gray-500">Total Products</p>
           <h2 class="text-3xl font-semibold text-blue-700">
-            {{ total_products }}
+            {{ total_product }}
           </h2>
         </div>
         <div class="bg-white rounded-lg shadow p-4 text-center">
-          <p class="text-gray-500">Total Orders</p>
+          <p class="text-gray-500">Total Category</p>
           <h2 class="text-3xl font-semibold text-blue-700">
-            {{ total_orders }}
+            {{ total_category }}
           </h2>
         </div>
         <div class="bg-white rounded-lg shadow p-4 text-center">
@@ -419,6 +409,8 @@
     });
   });
 </script>
+
+
 
   </body>
 </html>

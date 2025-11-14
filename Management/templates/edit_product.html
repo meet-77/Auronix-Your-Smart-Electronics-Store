@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Edit Product</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+
+<body class="bg-gray-100 p-10">
+
+<div class="max-w-3xl mx-auto bg-white p-6 rounded-lg shadow-md">
+
+    <h1 class="text-2xl font-bold mb-4">Edit Product</h1>
+
+    <form action="" method="POST" class="space-y-4">
+        {% csrf_token %}
+
+        <div>
+            <label class="font-semibold">Product Name</label>
+            <input type="text" name="product_name"
+                   value="{{ product.product_name }}"
+                   class="w-full border p-2 rounded-md">
+        </div>
+
+        <div>
+            <label class="font-semibold">Product Description</label>
+            <textarea name="product_description"
+                      class="w-full border p-2 rounded-md"
+                      rows="4">{{ product.product_description }}</textarea>
+        </div>
+
+        <div>
+            <label class="font-semibold">Stock</label>
+            <input type="number" name="product_stock"
+                   value="{{ product.product_stock }}"
+                   class="w-full border p-2 rounded-md">
+        </div>
+
+        <div>
+            <label class="font-semibold">Price (₹)</label>
+            <input type="number" name="price"
+                   value="{{ product.price }}"
+                   step="0.01"
+                   class="w-full border p-2 rounded-md">
+        </div>
+
+        <div>
+            <label class="font-semibold">Available</label>
+            <select name="available" class="w-full border p-2 rounded-md">
+                <option value="True" {% if product.available %}selected{% endif %}>Yes</option>
+                <option value="False" {% if not product.available %}selected{% endif %}>No</option>
+            </select>
+        </div>
+
+        <div>
+            <label class="font-semibold">Category</label>
+            <select name="category" class="w-full border p-2 rounded-md">
+                {% for c in categorys %}
+                    <option value="{{ c.id }}" {% if c.id == product.category.id %}selected{% endif %}>
+                        {{ c.category_name }}
+                    </option>
+                {% endfor %}
+            </select>
+        </div>
+
+        <button class="w-full bg-blue-600 text-white py-2 rounded-md hover:bg-blue-700">
+            Update Product
+        </button>
+
+    </form>
+
+</div>
+
+</body>
+</html>
