@@ -44,10 +44,9 @@ def login_view(request):
 
      
         login(request, user)
-        return redirect('/')  
+        return redirect('dashboard')  
 
     return render(request, 'login.html')
-
 
 
 def dashboard(request):
@@ -55,11 +54,13 @@ def dashboard(request):
     product = Product.objects.all()
     total_product = Product.objects.count()
     total_category = Category.objects.count()
+    total_user = User.objects.count()
     context = {
         'product':product,
         'category':category,
         'total_product':total_product,
         'total_category':total_category,
+        'total_user':total_user,
     }
     return render(request, 'dashboard.html', context)
 
