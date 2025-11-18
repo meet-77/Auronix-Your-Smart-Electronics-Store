@@ -23,28 +23,33 @@
         <span class="text-2xl font-bold text-blue-900">Auronix</span>
       </div>
 
-      <nav class="mt-6 space-y-2">
-        <a href="{% url 'dashboard' %}"
-           class="flex items-center px-6 py-2 hover:bg-blue-800 rounded-md transition">
+     <nav class="mt-6 space-y-2" id="sidebarMenu">
+        <a
+          href="{% url "dashboard" %}"
+          class="flex items-center px-6 py-2 hover:bg-blue-800 rounded-md"
+        >
           <span class="mr-2">📊</span> Dashboard
         </a>
 
-        <a href="{% url 'manageproduct' %}"
-           class="flex items-center px-6 py-2 hover:bg-blue-800 rounded-md transition">
+        <a
+          href="{% url 'manageproduct' %}"
+          class="flex items-center px-6 py-2 hover:bg-blue-800 rounded-md"
+        >
           <span class="mr-2">💻</span> Manage Products
         </a>
 
-        <a href="{% url 'managecategory' %}"
-           class="flex items-center px-6 py-2 hover:bg-blue-800 rounded-md transition">
+        <a
+          href="{% url 'managecategory' %}"
+          class="flex items-center px-6 py-2 hover:bg-blue-800 rounded-md"
+        >
           <span class="mr-2">🛒</span> Manage Category
         </a>
 
-        <a href="{% url 'manage_user' %}" class="flex items-center px-6 py-2 hover:bg-blue-800 rounded-md transition">
+        <a
+          href="{% url 'manage_user' %}"
+          class="flex items-center px-6 py-2 hover:bg-blue-800 rounded-md"
+        >
           <span class="mr-2">👥</span> Customers
-        </a>
-
-        <a href="#" class="flex items-center px-6 py-2 hover:bg-blue-800 rounded-md transition">
-          <span class="mr-2">📦</span> Inventory
         </a>
 
         <a href="{% url 'manageorder' %}" class="flex items-center px-6 py-2 hover:bg-blue-800 rounded-md">
@@ -52,17 +57,7 @@
         </a>
 
 
-        <a href="#" class="flex items-center px-6 py-2 hover:bg-blue-800 rounded-md transition">
-          <span class="mr-2">💰</span> Discounts
-        </a>
-
-        <a href="#" class="flex items-center px-6 py-2 hover:bg-blue-800 rounded-md transition">
-          <span class="mr-2">📈</span> Reports
-        </a>
-
-        <a href="#" class="flex items-center px-6 py-2 hover:bg-blue-800 rounded-md transition">
-          <span class="mr-2">⚙️</span> Settings
-        </a>
+     
       </nav>
     </aside>
 

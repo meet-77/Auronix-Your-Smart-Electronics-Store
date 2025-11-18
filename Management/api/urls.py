@@ -3,13 +3,13 @@ from Management.api.views import CategoryAPIView , ProductAPIView , Categorydeta
 
 urlpatterns = [
     path('category/', CategoryAPIView.as_view(), name='category_list_create'),
-    path('category/<int:pk>/', CategorydetalisAPIView.as_view(), name='category_detail'),
+    path('category/<int:id>/', CategorydetalisAPIView.as_view(), name='category_detail'),
     
     path('product/', ProductAPIView.as_view(), name='product_list_create'),
-    path('product/<int:pk>/' , ProductdetailsAPIView.as_view(), name='product_details' ),
+    path('product/<int:id>/' , ProductdetailsAPIView.as_view(), name='product_details' ),
     
     path('order/',OrderAPIView.as_view() , name='order_list_create'),
-    path('order/<int:pk>/',OrderdetailsAPIView.as_view() , name='order_details'),
+    path('order/<int:id>/',OrderdetailsAPIView.as_view() , name='order_details'),
 ]
 
 

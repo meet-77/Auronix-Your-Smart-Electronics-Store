@@ -35,27 +35,45 @@ class CategoryAPIView(APIView):
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-
 class CategorydetalisAPIView(APIView):
-    
-    def get(self , pk):
-        category = get_object_or_404(Category, pk=pk)
-        serializer = CategorySerializers(category )
+
+    def get(self, request, *args, **kwargs):
+        id = kwargs.get('id')
+        category = get_object_or_404(Category, id=id)
+        serializer = CategorySerializers(category)
         return Response(serializer.data)
-    
-    def put(self, request , pk):
-        category = get_object_or_404(Category, pk=pk)
+
+    def put(self, request, *args, **kwargs):
+        id = kwargs.get('id')
+        category = get_object_or_404(Category, id=id)
         serializer = CategorySerializers(category, data=request.data)
+
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data)
+
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-    
-                
-    def delete(self ,request , pk):
-        category = get_object_or_404(Category,pk=pk)
+
+    def patch(self, request, *args, **kwargs):
+        id = kwargs.get('id')
+        category = get_object_or_404(Category, id=id)
+        serializer = CategorySerializers(category, data=request.data, partial=True)
+
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data)
+
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+    def delete(self, request, *args, **kwargs):
+        id = kwargs.get('id')
+        category = get_object_or_404(Category, id=id)
         category.delete()
-        return Response({'message': 'Book deleted successfully'}, status=status.HTTP_204_NO_CONTENT)            
+        return Response(
+            {'message': 'Category deleted successfully'},
+            status=status.HTTP_204_NO_CONTENT
+        )
+          
         
 def add_product(request):
     if request.method == 'POST':
@@ -100,25 +118,45 @@ class ProductAPIView(APIView):
 
 
 class ProductdetailsAPIView(APIView):
-    
-    def get(self , pk):
-        product = get_object_or_404(Product,pk=pk)
+
+    def get(self, request, *args, **kwargs):
+        id = kwargs.get('id')
+        product = get_object_or_404(Product, id=id)
         serializer = ProductSerializers(product)
         return Response(serializer.data)
-    
-    def put(self , pk , request):
-        product = get_object_or_404(Product , pk=pk)
-        serializer = ProductSerializers(product , data=request.data)
+
+    def put(self, request, *args, **kwargs):
+        id = kwargs.get('id')
+        product = get_object_or_404(Product, id=id)
+        serializer = ProductSerializers(product, data=request.data)
+
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data)
+
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-    
-    def delete(self , request , pk):
-        product =get_object_or_404(Product, pk=pk)
+
+    def patch(self, request, *args, **kwargs):
+        id = kwargs.get('id')
+        product = get_object_or_404(Product, id=id)
+        serializer = ProductSerializers(product, data=request.data, partial=True)
+
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data)
+
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+    def delete(self, request, *args, **kwargs):
+        id = kwargs.get('id')
+        product = get_object_or_404(Product, id=id)
         product.delete()
-        return Response({'message': 'Book deleted successfully'}, status=status.HTTP_204_NO_CONTENT)           
-    
+        return Response(
+            {'message': 'Product deleted successfully'},
+            status=status.HTTP_204_NO_CONTENT
+        )
+
+
 
 def create_order(request):
     users = User.objects.all()
@@ -173,20 +211,40 @@ class OrderAPIView(APIView):
 
 class OrderdetailsAPIView(APIView):
 
-    def get(self, request, pk):
-        order = get_object_or_404(Order, pk=pk)
+    def get(self, request, *args, **kwargs):
+        id = kwargs.get('id')
+        order = get_object_or_404(Order, id=id)
         serializer = OrderSerializer(order)
         return Response(serializer.data)
 
-    def put(self, request, pk):
-        order = get_object_or_404(Order, pk=pk)
+    def put(self, request, *args, **kwargs):
+        id = kwargs.get('id')
+        order = get_object_or_404(Order, id=id)
         serializer = OrderSerializer(order, data=request.data)
+
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data)
-        return Response(serializer.errors)
 
-    def delete(self, request, pk):
-        order = get_object_or_404(Order, pk=pk)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+    def patch(self, request, *args, **kwargs):
+        id = kwargs.get('id')
+        order = get_object_or_404(Order, id=id)
+        serializer = OrderSerializer(order, data=request.data, partial=True)
+
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data)
+
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+    def delete(self, request, *args, **kwargs):
+        id = kwargs.get('id')
+        order = get_object_or_404(Order, id=id)
         order.delete()
-        return Response({'message': 'Order deleted successfully'}, status=status.HTTP_204_NO_CONTENT)
+        return Response(
+            {'message': 'Order deleted successfully'},
+            status=status.HTTP_204_NO_CONTENT
+        )
+

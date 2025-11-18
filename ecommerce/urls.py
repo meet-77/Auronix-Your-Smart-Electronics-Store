@@ -18,6 +18,26 @@ from django.contrib import admin
 from django.urls import path, include
 from Management.api.views import add_category, add_product , create_order
 from Management.views import dashboard , managecategory , edit_category , delete_category , manageproduct , edit_product, delete_product , login_view , register_view , edit_order , delete_order , ordermanage , manage_user , edit_user , delete_user
+from rest_framework import permissions
+from drf_yasg.views import get_schema_view
+from drf_yasg import openapi
+
+
+
+schema_view = get_schema_view(
+   openapi.Info(
+      title="Ecommerce API",
+      default_version='v1',
+      description="ecommerce website dashboard created ",
+      terms_of_service="https://www.google.com/policies/terms/",
+      contact=openapi.Contact(email="contact@xyz.local"),
+      license=openapi.License(name="BSD License"),
+   ),
+   public=True,
+   permission_classes=(permissions.AllowAny,),
+)
+
+
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -40,5 +60,6 @@ urlpatterns = [
     path('edit_user/<int:id>/', edit_user, name='edit_user'),
     path('delete_user/<int:id>/', delete_user, name='delete_user'),
     path('ecommerce/', include('Management.api.urls')),
+    path('swagger/', schema_view.with_ui('swagger', cache_timeout=0), name='schema-swagger-ui'),
 ]
 

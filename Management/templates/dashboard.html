@@ -32,9 +32,9 @@
         <!-- Text -->
         <span class="text-2xl font-bold text-blue-900">Auronix</span>
       </div>
-      <nav class="mt-6 space-y-2" id="sidebarMenu">
+         <nav class="mt-6 space-y-2" id="sidebarMenu">
         <a
-          href="#"
+          href="{% url "dashboard" %}"
           class="flex items-center px-6 py-2 hover:bg-blue-800 rounded-md"
         >
           <span class="mr-2">📊</span> Dashboard
@@ -61,40 +61,12 @@
           <span class="mr-2">👥</span> Customers
         </a>
 
-        <a
-          href="#"
-          class="flex items-center px-6 py-2 hover:bg-blue-800 rounded-md"
-        >
-          <span class="mr-2">📦</span> Inventory
+        <a href="{% url 'manageorder' %}" class="flex items-center px-6 py-2 hover:bg-blue-800 rounded-md">
+            <span class="mr-2">📦</span> Manage Order
         </a>
 
-        <a
-          href="#"
-          class="flex items-center px-6 py-2 hover:bg-blue-800 rounded-md"
-        >
-          <span class="mr-2">🗂️</span> Categories
-        </a>
 
-        <a
-          href="#"
-          class="flex items-center px-6 py-2 hover:bg-blue-800 rounded-md"
-        >
-          <span class="mr-2">💰</span> Discounts
-        </a>
-
-        <a
-          href="#"
-          class="flex items-center px-6 py-2 hover:bg-blue-800 rounded-md"
-        >
-          <span class="mr-2">📈</span> Reports
-        </a>
-
-        <a
-          href="#"
-          class="flex items-center px-6 py-2 hover:bg-blue-800 rounded-md"
-        >
-          <span class="mr-2">⚙️</span> Settings
-        </a>
+      
       </nav>
     </aside>
 
@@ -143,25 +115,25 @@
       <!-- Summary Cards -->
       <div class="grid grid-cols-4 gap-4 mb-8">
         <div class="bg-white rounded-lg shadow p-4 text-center">
-          <p class="text-gray-500">Total Products</p>
+          <p class="text-gray-500 font-bold">Total Products</p>
           <h2 class="text-3xl font-semibold text-blue-700">
             {{ total_product }}
           </h2>
         </div>
         <div class="bg-white rounded-lg shadow p-4 text-center">
-          <p class="text-gray-500">Total Category</p>
+          <p class="text-gray-500 font-bold">Total Category</p>
           <h2 class="text-3xl font-semibold text-blue-700">
             {{ total_category }}
           </h2>
         </div>
         <div class="bg-white rounded-lg shadow p-4 text-center">
-          <p class="text-gray-500">Total Customers</p>
+          <p class="text-gray-500 font-bold">Total Customers</p>
           <h2 class="text-3xl font-semibold text-blue-700">{{ total_user }}</h2>
         </div>
         <div class="bg-white rounded-lg shadow p-4 text-center">
-          <p class="text-gray-500">Revenue</p>
-          <h2 class="text-3xl font-semibold text-green-600">
-            ₹{{ total_revenue }}
+          <p class="text-gray-500 font-bold">Total Order</p>
+          <h2 class="text-3xl font-semibold text-blue-600">
+            {{ total_order }}
           </h2>
         </div>
       </div>
@@ -191,7 +163,7 @@
             onclick="showTab('order')"
             class="tab-btn bg-gray-200 px-4 py-2 rounded"
           >
-            Order
+           Add Order
           </button>
         </div>
 

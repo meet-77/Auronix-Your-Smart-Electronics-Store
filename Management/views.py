@@ -3,8 +3,31 @@ from Management.models import Category , Product , Order
 from django.contrib import messages
 from django.contrib.auth import authenticate, login, logout   
 from django.contrib.auth.models import User
+from django.contrib.auth.decorators import login_required
  
- 
+@login_required(login_url='/login/')
+def dashboard(request):
+    category = Category.objects.all()
+    product = Product.objects.all()
+    users = User.objects.all()  
+
+    total_product = Product.objects.count()
+    total_category = Category.objects.count()
+    total_user = User.objects.count()
+    total_order = Order.objects.count()
+
+    context = {
+        'product': product,
+        'category': category,
+        'users': users,   
+        'products': product,  
+        'total_product': total_product,
+        'total_category': total_category,
+        'total_user': total_user,
+        'total_order':total_order,
+    }
+    return render(request, 'dashboard.html', context)
+
 def register_view(request):
     if request.method == 'POST':
         first_name = request.POST.get('firstname')
@@ -48,33 +71,13 @@ def login_view(request):
 
     return render(request, 'login.html')
 
-
-def dashboard(request):
-    category = Category.objects.all()
-    product = Product.objects.all()
-    users = User.objects.all()  # 👈 added for order form
-
-    total_product = Product.objects.count()
-    total_category = Category.objects.count()
-    total_user = User.objects.count()
-
-    context = {
-        'product': product,
-        'category': category,
-        'users': users,  # 👈 send users to template
-        'products': product,  # 👈 send products for order form
-        'total_product': total_product,
-        'total_category': total_category,
-        'total_user': total_user,
-    }
-    return render(request, 'dashboard.html', context)
-
-
-
+@login_required
 def managecategory(request):
     category = Category.objects.all()
     return render(request , 'Managecategory.html',{'category':category})
 
+
+@login_required
 def edit_category(request , id):
     category = get_object_or_404(Category,id=id)
     
@@ -88,18 +91,19 @@ def edit_category(request , id):
     return render(request , 'edit_category.html', {'category':category})
 
 
+@login_required
 def delete_category(request , id):
     category = get_object_or_404(Category,id=id)
     category.delete()
     messages.success(request, "category deleted successfully!")
     return redirect('managecategory')
 
-
+@login_required
 def manageproduct(request):
     product = Product.objects.select_related('category').all()
     return render(request , 'manageproduct.html' , {'product':product})
 
-
+@login_required
 def edit_product(request , id):
     product = get_object_or_404(Product , id=id)
     categorys = Category.objects.all()
@@ -117,18 +121,19 @@ def edit_product(request , id):
         return redirect('manageproduct')
     return render(request , 'edit_product.html', {'product':product , 'categorys':categorys})
     
-    
+@login_required   
 def delete_product(request , id):
     product = get_object_or_404(Product,id=id)
     product.delete()
     messages.success(request, "product deleted successfully!")
     return redirect('manageproduct')
 
+@login_required
 def ordermanage(request):
     order = Order.objects.select_related('product', 'product__category').all()
     return render(request, 'manageorder.html', {'order': order})
 
-
+@login_required
 def edit_order(request, id):
     order = get_object_or_404(Order, id=id)
     users = User.objects.all()
@@ -152,18 +157,19 @@ def edit_order(request, id):
         'products': products
     })
 
-
+@login_required
 def delete_order(request, id):
     order = get_object_or_404(Order, id=id)
     order.delete()
     messages.success(request, "Order deleted successfully!")
     return redirect('manageorder')
 
-
+@login_required
 def manage_user(request):
     users = User.objects.all()  
     return render(request, 'Manageuser.html', {'users': users})
 
+@login_required
 def edit_user(request, id):
     user = get_object_or_404(User, id=id)
 
@@ -178,6 +184,7 @@ def edit_user(request, id):
 
     return render(request, 'edit_user.html', {'user': user})
 
+@login_required
 def delete_user(request, id):
     user = get_object_or_404(User, id=id)
     user.delete()
