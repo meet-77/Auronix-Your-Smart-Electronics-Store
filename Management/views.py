@@ -1,5 +1,5 @@
 from django.shortcuts import render , get_object_or_404 , redirect
-from Management.models import Category , Product
+from Management.models import Category , Product , Order
 from django.contrib import messages
 from django.contrib.auth import authenticate, login, logout   
 from django.contrib.auth.models import User
@@ -52,15 +52,20 @@ def login_view(request):
 def dashboard(request):
     category = Category.objects.all()
     product = Product.objects.all()
+    users = User.objects.all()  # 👈 added for order form
+
     total_product = Product.objects.count()
     total_category = Category.objects.count()
     total_user = User.objects.count()
+
     context = {
-        'product':product,
-        'category':category,
-        'total_product':total_product,
-        'total_category':total_category,
-        'total_user':total_user,
+        'product': product,
+        'category': category,
+        'users': users,  # 👈 send users to template
+        'products': product,  # 👈 send products for order form
+        'total_product': total_product,
+        'total_category': total_category,
+        'total_user': total_user,
     }
     return render(request, 'dashboard.html', context)
 
@@ -118,3 +123,63 @@ def delete_product(request , id):
     product.delete()
     messages.success(request, "product deleted successfully!")
     return redirect('manageproduct')
+
+def ordermanage(request):
+    order = Order.objects.select_related('product', 'product__category').all()
+    return render(request, 'manageorder.html', {'order': order})
+
+
+def edit_order(request, id):
+    order = get_object_or_404(Order, id=id)
+    users = User.objects.all()
+    products = Product.objects.all()
+
+    if request.method == "POST":
+        customer_id = request.POST.get('customer')
+        product_id = request.POST.get('product')
+        quantity = int(request.POST.get('quantity'))   # FIXED
+
+        order.customer = User.objects.get(id=customer_id)
+        order.product = Product.objects.get(id=product_id)
+        order.quantity = quantity
+        order.save()  # save() recalculates total
+
+        return redirect('manageorder')
+
+    return render(request, 'order_update.html', {
+        'order': order,
+        'users': users,
+        'products': products
+    })
+
+
+def delete_order(request, id):
+    order = get_object_or_404(Order, id=id)
+    order.delete()
+    messages.success(request, "Order deleted successfully!")
+    return redirect('manageorder')
+
+
+def manage_user(request):
+    users = User.objects.all()  
+    return render(request, 'Manageuser.html', {'users': users})
+
+def edit_user(request, id):
+    user = get_object_or_404(User, id=id)
+
+    if request.method == "POST":
+        user.username = request.POST.get('username')
+        user.first_name = request.POST.get('first_name')
+        user.last_name = request.POST.get('last_name')
+        user.email = request.POST.get('email')
+        user.save()
+        messages.success(request, "User updated successfully!")
+        return redirect('manage_user')
+
+    return render(request, 'edit_user.html', {'user': user})
+
+def delete_user(request, id):
+    user = get_object_or_404(User, id=id)
+    user.delete()
+    messages.success(request, "User deleted successfully!")
+    return redirect('manage_user')

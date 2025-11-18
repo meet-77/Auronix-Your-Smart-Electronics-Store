@@ -4,6 +4,7 @@ from Management.api.serializers import CategorySerializers , ProductSerializers 
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
+from django.contrib.auth.models import User
 
 def add_category(request):
     
@@ -119,39 +120,73 @@ class ProductdetailsAPIView(APIView):
         return Response({'message': 'Book deleted successfully'}, status=status.HTTP_204_NO_CONTENT)           
     
 
+def create_order(request):
+    users = User.objects.all()
+    products = Product.objects.all()
+
+    if request.method == "POST":
+        customer_id = request.POST.get("customer")
+        product_id = request.POST.get("product")
+        quantity = int(request.POST.get("quantity"))
+
+        data = {
+            "customer": customer_id,
+            "product": product_id,
+            "quantity": quantity,
+        }
+
+        serializer = OrderSerializer(data=data)
+
+        if serializer.is_valid():
+            serializer.save()
+            return redirect("dashboard")
+
+        # If validation fails → return dashboard with errors
+        category = Category.objects.all()
+        product_list = Product.objects.all()
+
+        return render(request, "dashboard.html", {
+            "users": users,
+            "products": products,
+            "category": category,
+            "product": product_list,
+            "errors": serializer.errors,
+        })
+
+    # GET request → open dashboard
+    return redirect("dashboard")
+
 class OrderAPIView(APIView):
-    
-    def get(self,request):    
+
+    def get(self, request):
         order = Order.objects.all()
-        serializer = OrderSerializer(order , many=True)
+        serializer = OrderSerializer(order, many=True)
         return Response(serializer.data)
-    
-    def post(self,request):
+
+    def post(self, request):
         serializer = OrderSerializer(data=request.data)
         if serializer.is_valid():
             serializer.save()
-            return Response(serializer.data , status=status.HTTP_201_CREATED)
-        return Response(serializer.errors , status=status.HTTP_400_BAD_REQUEST)    
-    
-    
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
 class OrderdetailsAPIView(APIView):
-    
-    def get(self , pk):
-        
-        order = get_object_or_404(Order,pk=pk)
+
+    def get(self, request, pk):
+        order = get_object_or_404(Order, pk=pk)
         serializer = OrderSerializer(order)
         return Response(serializer.data)
-    
-    def put(self , pk , request):
-        order = get_object_or_404(Order ,  pk=pk)
-        serializer = OrderSerializer(order , data=request.data)
+
+    def put(self, request, pk):
+        order = get_object_or_404(Order, pk=pk)
+        serializer = OrderSerializer(order, data=request.data)
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data)
         return Response(serializer.errors)
-    
-    def delete(self , request , pk):
-        order = get_object_or_404(Order ,pk=pk)
+
+    def delete(self, request, pk):
+        order = get_object_or_404(Order, pk=pk)
         order.delete()
-        return Response({'message': 'Book deleted successfully'}, status=status.HTTP_204_NO_CONTENT)           
-    
+        return Response({'message': 'Order deleted successfully'}, status=status.HTTP_204_NO_CONTENT)

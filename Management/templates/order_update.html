@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Update Order</title>
+</head>
+<body>
+
+<h2>Update Order</h2>
+
+<form method="POST">
+    {% csrf_token %}
+
+    <label>Customer:</label><br>
+    <select name="customer">
+        {% for user in users %}
+        <option value="{{ user.id }}" {% if user.id == order.customer.id %}selected{% endif %}>
+            {{ user.username }}
+        </option>
+        {% endfor %}
+    </select>
+    <br><br>
+
+    <label>Product:</label><br>
+    <select name="product">
+        {% for product in products %}
+        <option value="{{ product.id }}" {% if product.id == order.product.id %}selected{% endif %}>
+            {{ product.product_name }} (₹{{ product.price }})
+        </option>
+        {% endfor %}
+    </select>
+    <br><br>
+
+    <label>Quantity:</label>
+    <input type="number" name="quantity" value="{{ order.quantity }}" min="1" required>
+    <br><br>
+
+    <button type="submit">Update Order</button>
+</form>
+
+</body>
+</html>

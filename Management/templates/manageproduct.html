@@ -49,7 +49,7 @@
         <span class="mr-2">🛒</span> Manage Category
     </a>
 
-    <a href="#" class="flex items-center px-6 py-2 hover:bg-blue-800 rounded-md">
+    <a href="{% url 'manage_user' %}" class="flex items-center px-6 py-2 hover:bg-blue-800 rounded-md">
         <span class="mr-2">👥</span> Customers
     </a>
 
@@ -57,9 +57,10 @@
         <span class="mr-2">📦</span> Inventory
     </a>
 
-    <a href="#" class="flex items-center px-6 py-2 hover:bg-blue-800 rounded-md">
-        <span class="mr-2">🗂️</span> Categories
+    <a href="{% url 'manageorder' %}" class="flex items-center px-6 py-2 hover:bg-blue-800 rounded-md">
+        <span class="mr-2">📦</span> Manage Order
     </a>
+
 
     <a href="#" class="flex items-center px-6 py-2 hover:bg-blue-800 rounded-md">
         <span class="mr-2">💰</span> Discounts

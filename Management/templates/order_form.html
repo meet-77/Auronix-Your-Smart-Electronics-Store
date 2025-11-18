@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Create Order</title>
+</head>
+<body>
+    <h2>Create Order</h2>
+
+    <form method="POST">
+        {% csrf_token %}
+
+        <label>Customer:</label><br>
+        <select name="customer">
+            {% for user in users %}
+            <option value="{{ user.id }}">{{ user.username }}</option>
+            {% endfor %}
+        </select>
+        <br><br>
+
+        <label>Product:</label><br>
+        <select name="product">
+            {% for product in products %}
+            <option value="{{ product.id }}">{{ product.product_name }} (₹{{ product.price }})</option>
+            {% endfor %}
+        </select>
+        <br><br>
+
+        <label>Quantity:</label><br>
+        <input type="number" name="quantity" min="1" value="1" required>
+        <br><br>
+
+        <button type="submit">Place Order</button>
+    </form>
+
+</body>
+</html>
