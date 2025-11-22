@@ -1,0 +1,14 @@
+<!-- Management/templates/management/user_detail.html -->
+<!doctype html>
+<html>
+<head><title>User: {{ user_obj.username }}</title></head>
+<body>
+  <h1>{{ user_obj.username }}</h1>
+  <p><strong>Full name:</strong> {{ user_obj.first_name }} {{ user_obj.last_name }}</p>
+  <p><strong>Email:</strong> {{ user_obj.email }}</p>
+  <p><strong>Phone:</strong> {{ user_obj.phone }}</p>
+  <p><strong>Address:</strong> {{ user_obj.address }}</p>
+
+  <p><a href="{% url 'user-edit' user_obj.pk %}">Edit</a> | <a href="{% url 'management:user-list' %}">Back to list</a></p>
+</body>
+</html>

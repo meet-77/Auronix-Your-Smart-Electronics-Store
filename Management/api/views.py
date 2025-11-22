@@ -1,10 +1,59 @@
 from django.shortcuts import render, redirect , get_object_or_404 
-from Management.models import Category, Product , Order
-from Management.api.serializers import CategorySerializers , ProductSerializers , OrderSerializer
+from Management.models import Category, Product , Order , User
+from Management.api.serializers import CategorySerializers , ProductSerializers , OrderSerializer , UserSerializer , RegisterSerializer
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
-from django.contrib.auth.models import User
+from rest_framework import viewsets, permissions
+from django.contrib.auth import get_user_model
+from django.contrib.auth import authenticate
+from rest_framework.authtoken.models import Token
+
+User = get_user_model()
+
+# REGISTER API
+class RegisterAPI(APIView):
+    def post(self, request):
+        serializer = RegisterSerializer(data=request.data)
+        if serializer.is_valid():
+            user = serializer.save()
+            token, created = Token.objects.get_or_create(user=user)
+            return Response({
+                "message": "User registered successfully",
+                "token": token.key,
+                "user": RegisterSerializer(user).data
+            })
+        return Response(serializer.errors, status=400)
+
+
+# LOGIN API
+class LoginAPI(APIView):
+    def post(self, request):
+        username = request.data.get("username")
+        password = request.data.get("password")
+
+        user = authenticate(username=username, password=password)
+
+        if user:
+            token, created = Token.objects.get_or_create(user=user)
+            return Response({
+                "message": "Login successful",
+                "token": token.key,
+            })
+        return Response({"error": "Invalid credentials"}, status=400)
+    
+class UserViewSet(viewsets.ModelViewSet):
+    queryset = User.objects.all().order_by('id')
+    serializer_class = UserSerializer
+    permission_classes = [permissions.IsAuthenticatedOrReadOnly]
+
+    def perform_create(self, serializer):
+        password = serializer.validated_data.get("password")
+        instance = serializer.save()
+        if password:
+            instance.set_password(password)
+            instance.save()
+            
 
 def add_category(request):
     
@@ -73,7 +122,7 @@ class CategorydetalisAPIView(APIView):
             {'message': 'Category deleted successfully'},
             status=status.HTTP_204_NO_CONTENT
         )
-          
+        
         
 def add_product(request):
     if request.method == 'POST':

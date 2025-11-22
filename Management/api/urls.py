@@ -1,7 +1,13 @@
 from django.urls import path
-from Management.api.views import CategoryAPIView , ProductAPIView , CategorydetalisAPIView , ProductdetailsAPIView , OrderAPIView , OrderdetailsAPIView
+from Management.api.views import CategoryAPIView , ProductAPIView , CategorydetalisAPIView , ProductdetailsAPIView , OrderAPIView , OrderdetailsAPIView , UserViewSet , RegisterAPI , LoginAPI
+from rest_framework.routers import DefaultRouter
+
+router = DefaultRouter()
+router.register(r'users', UserViewSet, basename='user')
 
 urlpatterns = [
+    path('register/', RegisterAPI.as_view(), name='api_register'),
+    path('login/', LoginAPI.as_view(), name='api_login'),
     path('category/', CategoryAPIView.as_view(), name='category_list_create'),
     path('category/<int:id>/', CategorydetalisAPIView.as_view(), name='category_detail'),
     
@@ -13,3 +19,4 @@ urlpatterns = [
 ]
 
 
+urlpatterns += router.urls

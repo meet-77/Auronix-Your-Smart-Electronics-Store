@@ -1,11 +1,86 @@
 from django.shortcuts import render , get_object_or_404 , redirect
-from Management.models import Category , Product , Order
+from Management.models import Category , Product , Order , User
 from django.contrib import messages
 from django.contrib.auth import authenticate, login, logout   
-from django.contrib.auth.models import User
 from django.contrib.auth.decorators import login_required
- 
-@login_required(login_url='/login/')
+from django.urls import reverse_lazy
+from django.contrib.auth import get_user_model
+from django.views.generic import ListView, DetailView, UpdateView
+
+
+User = get_user_model()
+
+def register_view(request):
+    if request.method == "POST":
+        username = request.POST.get("username")
+        first_name = request.POST.get("first_name")
+        last_name = request.POST.get("last_name")
+        phone = request.POST.get("phone")
+        address = request.POST.get("address")
+        password = request.POST.get("password")
+
+        if User.objects.filter(username=username).exists():
+            messages.error(request, "Username already exists.")
+            return render(request, "register.html")
+
+        user = User(
+            username=username,
+            first_name=first_name,
+            last_name=last_name,
+            phone=phone,
+            address=address
+        )
+        user.set_password(password)
+        user.save()
+
+        login(request, user)
+        return redirect("login")
+
+    return render(request, "register.html")
+    
+def login_view(request):
+    if request.method == "POST":
+        username = request.POST.get("username")
+        password = request.POST.get("password")
+
+        user = authenticate(request, username=username, password=password)
+
+        if user is None:
+            messages.error(request, "Invalid username or password")
+            return render(request, "login.html")
+
+        login(request, user)
+        return redirect("dashboard")
+
+    return render(request, "login.html")
+
+# LOGOUT
+def logout_view(request):
+    logout(request)
+    return redirect("management:login")
+
+
+class UserListView(ListView):
+    model = User
+    template_name = "user_list.html"  
+    context_object_name = "users"
+    paginate_by = 20
+
+class UserDetailView(DetailView):
+    model = User
+    template_name = "user_detail.html"
+    context_object_name = "user_obj"
+
+class UserUpdateView(UpdateView):
+    model = User
+    fields = ['first_name', 'last_name', 'email', 'phone', 'address']
+    template_name = "user_form.html"
+    success_url = reverse_lazy('user-list')
+
+    def get_object(self, queryset=None):
+        # Using pk from URL
+        return get_object_or_404(User, pk=self.kwargs.get('pk'))
+    
 def dashboard(request):
     category = Category.objects.all()
     product = Product.objects.all()
@@ -28,56 +103,13 @@ def dashboard(request):
     }
     return render(request, 'dashboard.html', context)
 
-def register_view(request):
-    if request.method == 'POST':
-        first_name = request.POST.get('firstname')
-        last_name = request.POST.get('second_name')  
-        username = request.POST.get('username')
-        password = request.POST.get('password')
-
-     
-        if User.objects.filter(username=username).exists():
-            messages.info(request, 'Username is already taken.')
-            return redirect('/register/')
-
-        
-        User.objects.create_user(
-            first_name=first_name,
-            last_name=last_name,
-            username=username,
-            password=password
-        )
-
-        messages.success(request, 'Account created successfully.')
-        return redirect('/login/')   
-
-    return render(request, 'Register.html')
-
-
-def login_view(request):  
-    if request.method == "POST":
-        username = request.POST.get('username')
-        password = request.POST.get('password')
-
-        user = authenticate(request, username=username, password=password)
  
-        if user is None:
-            messages.error(request, "Invalid username or password.")
-            return redirect('/login/')   
-
-     
-        login(request, user)
-        return redirect('dashboard')  
-
-    return render(request, 'login.html')
-
-@login_required
 def managecategory(request):
     category = Category.objects.all()
     return render(request , 'Managecategory.html',{'category':category})
 
 
-@login_required
+ 
 def edit_category(request , id):
     category = get_object_or_404(Category,id=id)
     
@@ -91,19 +123,19 @@ def edit_category(request , id):
     return render(request , 'edit_category.html', {'category':category})
 
 
-@login_required
+ 
 def delete_category(request , id):
     category = get_object_or_404(Category,id=id)
     category.delete()
     messages.success(request, "category deleted successfully!")
     return redirect('managecategory')
 
-@login_required
+ 
 def manageproduct(request):
     product = Product.objects.select_related('category').all()
     return render(request , 'manageproduct.html' , {'product':product})
 
-@login_required
+ 
 def edit_product(request , id):
     product = get_object_or_404(Product , id=id)
     categorys = Category.objects.all()
@@ -121,19 +153,19 @@ def edit_product(request , id):
         return redirect('manageproduct')
     return render(request , 'edit_product.html', {'product':product , 'categorys':categorys})
     
-@login_required   
+ 
 def delete_product(request , id):
     product = get_object_or_404(Product,id=id)
     product.delete()
     messages.success(request, "product deleted successfully!")
     return redirect('manageproduct')
 
-@login_required
+ 
 def ordermanage(request):
     order = Order.objects.select_related('product', 'product__category').all()
     return render(request, 'manageorder.html', {'order': order})
 
-@login_required
+ 
 def edit_order(request, id):
     order = get_object_or_404(Order, id=id)
     users = User.objects.all()
@@ -156,37 +188,16 @@ def edit_order(request, id):
         'users': users,
         'products': products
     })
-
-@login_required
+ 
 def delete_order(request, id):
     order = get_object_or_404(Order, id=id)
     order.delete()
     messages.success(request, "Order deleted successfully!")
     return redirect('manageorder')
 
-@login_required
+ 
 def manage_user(request):
     users = User.objects.all()  
     return render(request, 'Manageuser.html', {'users': users})
 
-@login_required
-def edit_user(request, id):
-    user = get_object_or_404(User, id=id)
-
-    if request.method == "POST":
-        user.username = request.POST.get('username')
-        user.first_name = request.POST.get('first_name')
-        user.last_name = request.POST.get('last_name')
-        user.email = request.POST.get('email')
-        user.save()
-        messages.success(request, "User updated successfully!")
-        return redirect('manage_user')
-
-    return render(request, 'edit_user.html', {'user': user})
-
-@login_required
-def delete_user(request, id):
-    user = get_object_or_404(User, id=id)
-    user.delete()
-    messages.success(request, "User deleted successfully!")
-    return redirect('manage_user')
+ 

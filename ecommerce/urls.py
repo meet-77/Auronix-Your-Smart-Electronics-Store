@@ -17,11 +17,11 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path, include
 from Management.api.views import add_category, add_product , create_order
-from Management.views import dashboard , managecategory , edit_category , delete_category , manageproduct , edit_product, delete_product , login_view , register_view , edit_order , delete_order , ordermanage , manage_user , edit_user , delete_user
+from Management.views import dashboard , managecategory , edit_category , delete_category , manageproduct , edit_product, delete_product ,  edit_order , delete_order , ordermanage , manage_user , UserListView, UserDetailView, UserUpdateView , register_view , login_view , logout_view
 from rest_framework import permissions
 from drf_yasg.views import get_schema_view
 from drf_yasg import openapi
-
+    
 
 
 schema_view = get_schema_view(
@@ -37,12 +37,17 @@ schema_view = get_schema_view(
    permission_classes=(permissions.AllowAny,),
 )
 
+app_name = "management"
 
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('register/',register_view, name='register'),
+    path('register/', register_view, name='register'),
     path('login/', login_view, name='login'),
+    path('logout/', logout_view, name='logout'),
+    path('users/', UserListView.as_view(), name='user-list'),
+    path('users/<int:pk>/', UserDetailView.as_view(), name='user-detail'),
+    path('users/<int:pk>/edit/', UserUpdateView.as_view(), name='user-edit'),
     path('dashboard/', dashboard, name='dashboard'),
     path('add_category/', add_category, name='add_category'),
     path('managecategory/', managecategory , name='managecategory'),
@@ -57,8 +62,7 @@ urlpatterns = [
     path('order/edit/<int:id>/', edit_order, name='edit_order'),
     path('order/delete/<int:id>/', delete_order, name='delete_order'),
     path('manage_user/', manage_user, name='manage_user'),
-    path('edit_user/<int:id>/', edit_user, name='edit_user'),
-    path('delete_user/<int:id>/', delete_user, name='delete_user'),
+ 
     path('ecommerce/', include('Management.api.urls')),
     path('swagger/', schema_view.with_ui('swagger', cache_timeout=0), name='schema-swagger-ui'),
 ]

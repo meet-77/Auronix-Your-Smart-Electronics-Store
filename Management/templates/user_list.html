@@ -1,0 +1,30 @@
+<!-- Management/templates/management/user_list.html -->
+<!doctype html>
+<html>
+<head><title>Users</title></head>
+<body>
+  <h1>User list</h1>
+  <ul>
+    {% for u in users %}
+      <li>
+        <a href="{% url 'user-detail' u.pk %}">{{ u.username }}</a>
+        — {{ u.email }}
+      </li>
+    {% empty %}
+      <li>No users yet.</li>
+    {% endfor %}
+  </ul>
+
+  {% if is_paginated %}
+    <div>
+      {% if page_obj.has_previous %}
+        <a href="?page={{ page_obj.previous_page_number }}">previous</a>
+      {% endif %}
+      <span>Page {{ page_obj.number }} of {{ paginator.num_pages }}</span>
+      {% if page_obj.has_next %}
+        <a href="?page={{ page_obj.next_page_number }}">next</a>
+      {% endif %}
+    </div>
+  {% endif %}
+</body>
+</html>

@@ -15,6 +15,7 @@ from pathlib import Path
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
+AUTH_USER_MODEL = 'Management.User'
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/5.2/howto/deployment/checklist/
@@ -44,6 +45,7 @@ INSTALLED_APPS = [
     'theme',
     'Management',
     'rest_framework',
+    'rest_authtoken',
     'drf_yasg',
 ]
 
@@ -56,6 +58,18 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
+
+REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': (
+        'rest_framework.authentication.TokenAuthentication',
+        'rest_framework.authentication.SessionAuthentication',
+    ),
+    'DEFAULT_PERMISSION_CLASSES': (
+        'rest_framework.permissions.AllowAny',
+    ),
+}
+
+AUTH_USER_MODEL = 'Management.User'
 
 ROOT_URLCONF = 'ecommerce.urls'
 
@@ -75,6 +89,8 @@ TEMPLATES = [
 ]
 
 WSGI_APPLICATION = 'ecommerce.wsgi.application'
+
+
 
 
 # Database
@@ -130,5 +146,5 @@ STATIC_URL = 'static/'
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 
-LOGIN_URL = '/login/'
-LOGIN_REDIRECT_URL = '/'  
+LOGIN_REDIRECT_URL = '/dashboard/'
+LOGOUT_REDIRECT_URL = '/login/'
