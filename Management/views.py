@@ -54,10 +54,10 @@ def login_view(request):
 
     return render(request, "login.html")
 
-# LOGOUT
+
 def logout_view(request):
     logout(request)
-    return redirect("management:login")
+    return redirect('login')
 
 
 class UserListView(ListView):
@@ -78,7 +78,6 @@ class UserUpdateView(UpdateView):
     success_url = reverse_lazy('user-list')
 
     def get_object(self, queryset=None):
-        # Using pk from URL
         return get_object_or_404(User, pk=self.kwargs.get('pk'))
     
 def dashboard(request):
@@ -165,7 +164,7 @@ def ordermanage(request):
     order = Order.objects.select_related('product', 'product__category').all()
     return render(request, 'manageorder.html', {'order': order})
 
- 
+
 def edit_order(request, id):
     order = get_object_or_404(Order, id=id)
     users = User.objects.all()
@@ -174,12 +173,12 @@ def edit_order(request, id):
     if request.method == "POST":
         customer_id = request.POST.get('customer')
         product_id = request.POST.get('product')
-        quantity = int(request.POST.get('quantity'))   # FIXED
-
+        quantity = int(request.POST.get('quantity'))   
+    
         order.customer = User.objects.get(id=customer_id)
         order.product = Product.objects.get(id=product_id)
         order.quantity = quantity
-        order.save()  # save() recalculates total
+        order.save()   
 
         return redirect('manageorder')
 

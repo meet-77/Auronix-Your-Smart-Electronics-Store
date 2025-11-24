@@ -4,14 +4,15 @@ from Management.api.serializers import CategorySerializers , ProductSerializers 
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
-from rest_framework import viewsets, permissions
+from rest_framework import viewsets, permissions , authentication
+from rest_framework.authentication import SessionAuthentication
 from django.contrib.auth import get_user_model
 from django.contrib.auth import authenticate
 from rest_framework.authtoken.models import Token
 
 User = get_user_model()
 
-# REGISTER API
+
 class RegisterAPI(APIView):
     def post(self, request):
         serializer = RegisterSerializer(data=request.data)
@@ -26,8 +27,9 @@ class RegisterAPI(APIView):
         return Response(serializer.errors, status=400)
 
 
-# LOGIN API
+  
 class LoginAPI(APIView):
+    authentication_classes = [SessionAuthentication]
     def post(self, request):
         username = request.data.get("username")
         password = request.data.get("password")
@@ -42,10 +44,13 @@ class LoginAPI(APIView):
             })
         return Response({"error": "Invalid credentials"}, status=400)
     
+    
 class UserViewSet(viewsets.ModelViewSet):
     queryset = User.objects.all().order_by('id')
     serializer_class = UserSerializer
+    authentication_classes = [SessionAuthentication]
     permission_classes = [permissions.IsAuthenticatedOrReadOnly]
+    
 
     def perform_create(self, serializer):
         password = serializer.validated_data.get("password")
@@ -195,7 +200,7 @@ class ProductdetailsAPIView(APIView):
             return Response(serializer.data)
 
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-
+ 
     def delete(self, request, *args, **kwargs):
         id = kwargs.get('id')
         product = get_object_or_404(Product, id=id)
